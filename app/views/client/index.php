@@ -1,1 +1,10 @@
-hello Client welcome to our website
+<?php     
+        require_once '../../config/config.php';
+        session_start();
+    
+        if ($_SESSION['roleUser'] != 'client') {
+            Redirect('../admin/index.php');
+        }
+        print_r(uniqid());
+?>
+
