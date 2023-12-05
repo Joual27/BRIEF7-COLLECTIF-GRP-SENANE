@@ -1,5 +1,6 @@
 <?php
     require_once '../repositories/database.php';
+        
     session_start();
 
     $username = $_POST['username'];
@@ -20,9 +21,9 @@
     }
     if (!$row) {
         Redirect(APPROOT . 'views/login.php' , false);
+        
     }else {
-        $_SESSION['username'] = $usermame;
-        $_SESSION['password'] = $password;
+        $_SESSION['username'] = $username;
 
         $userID = $row->userID;  
         $sql = "SELECT * FROM roleOfUser WHERE userID = $userID";
@@ -34,10 +35,17 @@
         } catch (PDOException $e) {
             die($e->getMessage());
         }
-        if ($roleOfuser->roleName === 'admin') {
-            Redirect(APPROOT .'/views/admin/index.php' , false);
+        if ($roleOfuser->roleName === 'client') { 
+            $_SESSION['roleUser'] = $roleOfuser->roleName;
+            Redirect(APPROOT .'/views/client/index.php' , false);
         }else {
-            Redirect(APPROOT . 'views/client/index.php' , false);
+            $_SESSION['roleUser'] = $roleOfuser->roleName;
+            Redirect(APPROOT . 'views/admin/index.php' , false);
+
+            // Todo 
+            // if () {
+            //     # code...
+            // }
         }
         
     }
