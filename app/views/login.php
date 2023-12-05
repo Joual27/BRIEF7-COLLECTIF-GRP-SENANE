@@ -1,3 +1,49 @@
+<?php
+require_once("../config/config.php");
+session_start();
+
+$loginIssue = "";
+
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+   $username = $_POST["username"];
+   $password = $_POST["password"];
+
+   $errorMsg = "";
+   $usernameErr = "";
+   $pwErr = "";
+
+   if(empty($username) || empty($password)){
+    $errorMsg = "Both username and password are required";
+   }
+   else{
+      $username = trim($username);
+      $userNameRegex = "/^[a-zA-Z0-9_]+$/";
+      $pwRegex = "/^(?=.*[A-Z])(?=.*\d).+$/";
+
+    if(!preg_match($userNameRegex,$username)){
+         $usernameErr = "username can contain only Chars or Numbers !";
+     }
+          
+    if(strlen($password) < 8){
+            $pwErr = "Password must contain 8 digits at least";
+    }
+    else if(!preg_match($pwRegex,$password)){
+         $pwErr = "pw must contain 1 Upper letter and 1 number !";
+    }
+     else {
+            Redirect("../auth/authentification.php?username=$username&pw=$password");
+    }
+
+   }
+}
+
+if(isset($_SESSION["authError"])){
+    $loginIssue = $_SESSION["authError"];
+    unset($_SESSION["authError"]);
+}
+
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,19 +66,25 @@
               <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                   Sign in to your account
               </h1>
-              <form class="space-y-4 md:space-y-6" action="../auth/authentification.php" method="POST">
+              <form class="space-y-4 md:space-y-6"  method="POST">
                   <div>
-                      <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your Username</label>
-                      <input type="text" name="username" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter username" required="">
+                      <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your Username</label>
+                      <input type="text" name="username" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter username">
+                      <p class="text-white font-semibold"><?php if(!empty($usernameErr)){
+                        echo $usernameErr;
+                      } ?></p>
                   </div>
                   <div>
                       <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                      <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
-                  </div>
+                      <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      <p class="text-white font-semibold"><?php if(!empty($pwErr)){
+                        echo $pwErr;
+                      } ?></p>
+                    </div>
                   <div class="flex items-center justify-between">
                       <div class="flex items-start">
                           <div class="flex items-center h-5">
-                            <input id="remember" aria-describedby="remember" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required="">
+                            <input id="remember" aria-describedby="remember" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800">
                           </div>
                           <div class="ml-3 text-sm">
                             <label for="remember" class="text-gray-500 dark:text-gray-300">Remember me</label>
@@ -40,6 +92,16 @@
                       </div>
                   </div>
                   <button type="submit" class="w-full text-gray-800 bg-white  focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:focus:ring-primary-800 block">Sign in</button>
+                  <p class="text-white font-semibold">
+                  <?php if(!empty($errorMsg)){
+                        echo $errorMsg;
+                      } ?>
+                  </p>
+                  <p class="text-white font-semibold">
+                  <?php if(!empty($loginIssue)){
+                        echo $loginIssue;
+                      } ?>
+                  </p>
 
               </form>
           </div>

@@ -1,12 +1,14 @@
 <?php
     require_once '../repositories/database.php';
+
     session_start();
 
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = $_GET["username"];
+    $password = $_GET["pw"];
 
     
-    
+
+   
     $db = new Database();
     $sql = "SELECT * FROM users WHERE username = :user and userPass = :userPass";
     $stmt = $db->connectDB()->prepare($sql);
@@ -19,9 +21,10 @@
         die($e->getMessage());
     }
     if (!$row) {
-        Redirect(APPROOT . 'views/login.php' , false);
+        $_SESSION["authError"] = "Invalid credentials . TRY AGAIN !";
+        Redirect('../views/login.php', false);
     }else {
-        $_SESSION['username'] = $usermame;
+        $_SESSION['username'] = $username;
         $_SESSION['password'] = $password;
 
         $userID = $row->userID;  
@@ -35,9 +38,9 @@
             die($e->getMessage());
         }
         if ($roleOfuser->roleName === 'admin') {
-            Redirect(APPROOT .'/views/admin/index.php' , false);
+            Redirect('../views/admin/index.php' , false);
         }else {
-            Redirect(APPROOT . 'views/client/index.php' , false);
+            Redirect('../views/client/index.php' , false);
         }
         
     }
