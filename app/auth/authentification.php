@@ -1,29 +1,44 @@
 <?php
     require_once '../repositories/database.php';
-
     session_start();
-    $_SESSION['username'] = $_POST['username'];
-    $_SESSION['password'] = $_POST['password'];
 
-    $user = $_SESSION['username'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
     
     
     $db = new Database();
     $sql = "SELECT * FROM users WHERE username = :user and userPass = :userPass";
     $stmt = $db->connectDB()->prepare($sql);
-    $stmt->bindParam(":user" , $user , PDO::PARAM_STR);
-    $stmt->bindParam(":userPass" , $_SESSION['password'] , PDO::PARAM_STR);
+    $stmt->bindParam(":user" , $username , PDO::PARAM_STR);
+    $stmt->bindParam(":userPass" , $password , PDO::PARAM_STR);
     try {
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_OBJ);
     } catch (PDOException $e) {
         die($e->getMessage());
     }
-
     if (!$row) {
-        Redirect('../views/login.php' , false);
+        Redirect(APPROOT . 'views/login.php' , false);
     }else {
-        Redirect("../../public/index.php");
+        $_SESSION['username'] = $usermame;
+        $_SESSION['password'] = $password;
+
+        $userID = $row->userID;  
+        $sql = "SELECT * FROM roleOfUser WHERE userID = $userID";
+
+        $stmt = $db->connectDB()->prepare($sql);
+        try {
+            $stmt->execute();
+            $roleOfuser = $stmt->fetch(PDO::FETCH_OBJ);
+        } catch (PDOException $e) {
+            die($e->getMessage());
+        }
+        if ($roleOfuser->roleName === 'admin') {
+            Redirect(APPROOT .'/views/admin/index.php' , false);
+        }else {
+            Redirect(APPROOT . 'views/client/index.php' , false);
+        }
         
     }
 
