@@ -21,9 +21,11 @@
                 $this->connect = new PDO("mysql:host=" . $this->db_host . ";dbname=" . $this->db_name, $this->db_user , $this->db_pass );
                 $this->connect->setAttribute(PDO::ATTR_ERRMODE , PDO::ERRMODE_EXCEPTION);
                 return $this->connect;
+                echo "Connected";
             } catch (PDOException $e) {
                 $this->error = $e->getMessage();
-                return $this->error;   
+                return $this->error;  
+                echo "Connected";
             }
 
         }
