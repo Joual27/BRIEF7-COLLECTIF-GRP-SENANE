@@ -20,11 +20,12 @@
         die($e->getMessage());
     }
     if (!$row) {
+        $_SESSION["authError"] = "Invalid credentials . TRY AGAIN !";
         Redirect(APPROOT . 'views/login.php' , false);
-        
     }else {
         $_SESSION['username'] = $username;
-
+        $_SESSION['password'] = $password;
+        
         $userID = $row->userID;  
         $sql = "SELECT * FROM roleOfUser WHERE userID = $userID";
 
@@ -40,7 +41,7 @@
             Redirect(APPROOT .'/views/client/index.php' , false);
         }else {
             $_SESSION['roleUser'] = $roleOfuser->roleName;
-            Redirect(APPROOT . 'views/admin/index.php' , false);
+            Redirect(APPROOT . '/views/admin/index.php' , false);
 
             // Todo 
             // if () {

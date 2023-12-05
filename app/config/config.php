@@ -6,8 +6,8 @@
     define("DB_NAME" , 'db_bank');
 
     // Root Application 
-    define('APPROOT' , 'http://localhost/BRIEF7-COLLECTIF-GRP-SENANE/app/');
-    define('PUBLICROOT' , 'http://localhost/BRIEF7-COLLECTIF-GRP-SENANE/public/');
+    define('APPROOT' , 'http://localhost/BANK-APP-EXTENSION/app');
+    define('PUBLICROOT' , 'http://localhost/BANK-APP-EXTENSION/public');
 
 
 // Redirect Funtion 
