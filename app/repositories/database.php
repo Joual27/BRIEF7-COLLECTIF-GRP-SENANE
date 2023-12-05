@@ -11,8 +11,16 @@
         private $stmt;
         private $error;
 
+
         public function __construct()
         {
+        }
+
+        public function getStmt(){
+            return $this->stmt;
+        }
+        public function setStmt($stmt){
+            $this->stmt = $stmt;
         }
 
         // Connction to data base

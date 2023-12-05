@@ -3,8 +3,8 @@
 
     session_start();
 
-    $username = $_GET["username"];
-    $password = $_GET["pw"];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
     
 
@@ -22,7 +22,7 @@
     }
     if (!$row) {
         $_SESSION["authError"] = "Invalid credentials . TRY AGAIN !";
-        Redirect('../views/login.php', false);
+        Redirect(APPROOT . 'views/login.php' , false);
     }else {
         $_SESSION['username'] = $username;
         $_SESSION['password'] = $password;
@@ -38,9 +38,9 @@
             die($e->getMessage());
         }
         if ($roleOfuser->roleName === 'admin') {
-            Redirect('../views/admin/index.php' , false);
+            Redirect(APPROOT .'/views/admin/index.php' , false);
         }else {
-            Redirect('../views/client/index.php' , false);
+            Redirect(APPROOT .'/views/client/index.php' , false);
         }
         
     }

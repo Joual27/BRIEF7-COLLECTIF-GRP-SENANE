@@ -2,7 +2,7 @@
 
 
 
-
+require_once("UserServiceInterface.php");
 
 
 
@@ -11,7 +11,17 @@ class UserService implements UserServiceInterface{
 
     public function getAllUsers()
     {
+        $fetchUsersDataQuery = "select * from users";
+        $stmt = $this->db->getStmt();
+        $stmt= $this->db->connectDB()->prepare($fetchUsersDataQuery);
         
+        try{
+            $stmt->execute();
+        }
+        catch(PDOException $e){
+            die($e->getMessage());
+        }   
+               
     }
     public function getUserByUsername($username)
     {
